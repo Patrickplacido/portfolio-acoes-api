@@ -1,0 +1,94 @@
+# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Build results
+bin/
+obj/
+
+# Uncomment if you have tasks that create the documentation
+# docs/
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+packages/
+*.package
+*.nuspec
+*.nupkg
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuget
+# The packages folder can be ignored if you are using a package management tool like NuGet.
+# To enable package restore, uncomment the line below.
+# !packages/*
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# StyleCop
+*.stylecop.json
+
+# Rider
+.idea/
+
+# Visual Studio Code
+.vscode/
+.vs/
+
+# MacOS
+*.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# Environment Files
+.env
+.env.local
+
+# DotCover
+*.dotCover
+
+# Coverlet
+coverage/
+
+# JetBrains Rider
+.idea/
+
+# Visual Studio for Mac
+.vscode/
+
+# Local History for Visual Studio
+.localhistory/
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Azure DevOps
+.azure/
+
+# Other
+*.user
+*.suo
+*.userosscache
+*.suo
+*.tss
+*.vscode/
+
+# SQL Server Data Files
+*.mdf
+*.ldf
+
+# Mac System Files
+*.DS_Store
+
+# Windows System Files
+Thumbs.db
+Desktop.ini
