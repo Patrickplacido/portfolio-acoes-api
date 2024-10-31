@@ -125,7 +125,10 @@ cd seu-repositorio
 3. Restaure os pacotes do projeto:
 dotnet restore
 
-4. Execute o projeto:
+4. Execute as migrations para configurar o banco de dados:
+dotnet ef database update
+
+5. Execute o projeto:
 dotnet run
 
 5. A API estará disponível em http://localhost:5071 por padrão.
