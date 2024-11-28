@@ -6,21 +6,14 @@ using PortfolioAcoes.Application.Responses;
 
 namespace PortfolioAcoes.Application.Services;
 
-public class AlphaVantageService : IAlphaVantageService
+public class AlphaVantageService(HttpClient httpClient, IConfiguration configuration) : IAlphaVantageService
 {
-    private readonly HttpClient _httpClient;
-    private readonly string _apiKey;
-
-    public AlphaVantageService(HttpClient httpClient, IConfiguration configuration)
-    {
-        _httpClient = httpClient;
-        _apiKey = configuration["apiKey"];
-    }
+    private readonly string _apiKey = configuration["apiKey"]!;
 
     public async Task<decimal> GetPrecoAtualPorAcaoAsync(string ticker)
     {
         var url = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}.sao&outputsize=full&apikey={_apiKey}";
-        var response = await _httpClient.GetStringAsync(url);
+        var response = await httpClient.GetStringAsync(url);
 
         var alphaVantageResponse = JsonConvert.DeserializeObject<AlphaVantageResponse>(response);
 

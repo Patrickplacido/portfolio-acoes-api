@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Identity;
 using PortfolioAcoes.Application.Services;
 using PortfolioAcoes.Domain.Repositories;
 using PortfolioAcoes.Domain.Services;
 using PortfolioAcoes.Infrastructure;
 using PortfolioAcoes.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using PortfolioAcoes.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddUserSecrets<Program>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -34,10 +36,27 @@ builder.Services.AddDbContext<AcaoDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
+builder.Services.AddDbContext<ApplicationIdentityDbContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedEmail = false;
+});
+
+// Registre o serviço de envio de e-mail
+builder.Services.AddTransient<IEmailSender<IdentityUser>, EmailSender>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if ( app.Environment.IsDevelopment() )
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -45,7 +64,7 @@ if ( app.Environment.IsDevelopment() )
 
 app.UseCors("AllowAll");
 app.UseAuthorization();
-
+app.MapIdentityApi<IdentityUser>();
 app.MapControllers();
 
 app.Run();
