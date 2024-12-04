@@ -19,7 +19,6 @@ public class AcaoController : ControllerBase
     [HttpPost("compra")]
     public async Task<IActionResult> ComprarAcao([FromQuery] string ticker, [FromQuery] int quantidade, [FromQuery] decimal precoPorAcao)
     {
-        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         await _acaoService.EfetuarCompraAsync(ticker, quantidade, precoPorAcao);
         return Ok();
     }
@@ -27,7 +26,6 @@ public class AcaoController : ControllerBase
     [HttpPost("venda")]
     public async Task<IActionResult> VenderAcao([FromQuery] string ticker, [FromQuery] int quantidade, [FromQuery] decimal precoPorAcao)
     {
-        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         await _acaoService.EfetuarVendaAsync(ticker, quantidade, precoPorAcao);
         return Ok();
     }
@@ -35,7 +33,6 @@ public class AcaoController : ControllerBase
     [HttpPost("dividendo")]
     public async Task<IActionResult> ReceberDividendo([FromQuery] string ticker, [FromQuery] decimal valorDividendo)
     {
-        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         await _acaoService.ReceberDividendoAsync(ticker, valorDividendo);
         return Ok();
     }
@@ -43,7 +40,6 @@ public class AcaoController : ControllerBase
     [HttpGet("lucro-ou-perda")]
     public async Task<IActionResult> CalcularLucroOuPerda([FromQuery] string ticker)
     {
-        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         var perdaOuGanho = await _acaoService.CalcularLucroOuPerda(ticker);
         return Ok(perdaOuGanho);
     }
