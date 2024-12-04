@@ -10,14 +10,11 @@ public class Acao
     public string Ticker { get; private set; }
     public int Quantidade { get; private set; }
     public decimal TotalInvestido { get; private set; }
-    public string UserId { get; private set; }
-
-    public Acao(string ticker, string userId)
+    public Acao(string ticker)
     {
         Ticker = ticker ?? throw new ArgumentNullException(nameof(ticker));
         Quantidade = 0;
         TotalInvestido = 0m;
-        UserId = userId;
     }
 
     public void AddQuantidade(int quantidade, decimal precoPorAcao)

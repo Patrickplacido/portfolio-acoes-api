@@ -13,19 +13,17 @@ public class Transacao
     public TipoTransacaoEntity Tipo { get; private set; } = null!;
     public int Quantidade { get; private set; }
     public decimal PrecoPorAcao { get; private set; }
-    public string UserId { get; private set; }
 
 #nullable disable
     public Transacao() { }
 #nullable enable
 
-    public Transacao(string ticker, DateTime data, int tipo, int quantidade, decimal precoPorAcao, string userId)
+    public Transacao(string ticker, DateTime data, int tipo, int quantidade, decimal precoPorAcao)
     {
         Ticker = ticker ?? throw new ArgumentNullException(nameof(ticker));
         Data = data;
         TipoTransacaoId = tipo;
         Quantidade = quantidade;
         PrecoPorAcao = precoPorAcao;
-        UserId = userId;
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using PortfolioAcoes.Application.Services;
 using PortfolioAcoes.Domain.Repositories;
@@ -5,7 +6,6 @@ using PortfolioAcoes.Domain.Services;
 using PortfolioAcoes.Infrastructure;
 using PortfolioAcoes.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using PortfolioAcoes.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,6 +51,9 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.SignIn.RequireConfirmedEmail = false;
 });
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
+
 // Registre o serviço de envio de e-mail
 builder.Services.AddTransient<IEmailSender<IdentityUser>, EmailSender>();
 
@@ -64,6 +67,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAll");
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapIdentityApi<IdentityUser>();

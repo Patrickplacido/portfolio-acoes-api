@@ -12,10 +12,10 @@ public class AcaoRepository : IAcaoRepository
     {
         _acaoDbContext = context;
     }
-    public async Task<Acao?> GetAcaoAsync(string ticker, string userId)
+    public async Task<Acao?> GetAcaoAsync(string ticker)
     {
         var acao = await _acaoDbContext.Acoes
-            .Where(a => a.Ticker == ticker && a.UserId == userId)
+            .Where(a => a.Ticker == ticker)
             .Select(a => a)
             .FirstOrDefaultAsync();
 
@@ -71,18 +71,18 @@ public class AcaoRepository : IAcaoRepository
         await _acaoDbContext.SaveChangesAsync();
     }
 
-    public async Task<List<Acao>> GetAcoesAsync(string userId)
+    public async Task<List<Acao>> GetAcoesAsync()
     {
-        return await _acaoDbContext.Acoes.Where(u => u.UserId == userId).ToListAsync();
+        return await _acaoDbContext.Acoes.ToListAsync();
     }
 
-    public async Task<List<Dividendo>> GetDividendosAsync(string userId)
+    public async Task<List<Dividendo>> GetDividendosAsync()
     {
-        return await _acaoDbContext.Dividendos.Where(u => u.UserId == userId).ToListAsync();
+        return await _acaoDbContext.Dividendos.ToListAsync();
     }
 
-    public async Task<List<Transacao>> GetTransacoesAsync(string userId)
+    public async Task<List<Transacao>> GetTransacoesAsync()
     {
-        return await _acaoDbContext.Transacoes.Where(u => u.UserId == userId).ToListAsync();
+        return await _acaoDbContext.Transacoes.ToListAsync();
     }
 }

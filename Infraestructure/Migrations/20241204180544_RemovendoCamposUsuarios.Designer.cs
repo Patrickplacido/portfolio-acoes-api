@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PortfolioAcoes.Infrastructure;
 
@@ -11,9 +12,11 @@ using PortfolioAcoes.Infrastructure;
 namespace PortfolioAcoes.Infrastructure.Migrations
 {
     [DbContext(typeof(AcaoDbContext))]
-    partial class AcaoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241204180544_RemovendoCamposUsuarios")]
+    partial class RemovendoCamposUsuarios
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
