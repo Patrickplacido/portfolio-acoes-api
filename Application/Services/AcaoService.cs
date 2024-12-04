@@ -10,20 +10,25 @@ namespace PortfolioAcoes.Application.Services
     {
         private readonly IAlphaVantageService _alphaVantageService;
         private readonly IAcaoRepository _acaoRepository;
+        private string UserName;
 
-        public AcaoService(IAlphaVantageService alphaVantageService, IAcaoRepository acaoRepository)
+        public AcaoService
+        (
+            IAlphaVantageService alphaVantageService, 
+            IAcaoRepository acaoRepository
+        )
         {
             _alphaVantageService = alphaVantageService;
             _acaoRepository = acaoRepository;
         }
 
-        public async Task EfetuarCompraAsync(string ticker, int quantidade, decimal precoPorAcao)
+        public async Task EfetuarCompraAsync(string ticker, int quantidade, decimal precoPorAcao, string userName)
         {
-            var acao = await _acaoRepository.GetAcaoAsync(ticker);
+            var acao = await _acaoRepository.GetAcaoAsync(ticker, userName);
 
             if ( acao == null )
             {
-                acao = new Acao(ticker);
+                acao = new Acao(ticker, userName);
             }
 
             var acaoAggregate = new AcaoAggregate(acao);
@@ -31,14 +36,14 @@ namespace PortfolioAcoes.Application.Services
 
             await _acaoRepository.InsertAcaoAsync(acao);
 
-            var transacao = new Transacao(ticker, DateTime.UtcNow, (int)TipoTransacaoEnum.Compra, quantidade, precoPorAcao);
+            var transacao = new Transacao(ticker, DateTime.UtcNow, (int)TipoTransacaoEnum.Compra, quantidade, precoPorAcao, userName);
 
             await _acaoRepository.InsertTransacaoAsync(transacao);
         }
 
-        public async Task EfetuarVendaAsync(string ticker, int quantidade, decimal precoPorAcao)
+        public async Task EfetuarVendaAsync(string ticker, int quantidade, decimal precoPorAcao, string userId)
         {
-            var acao = await _acaoRepository.GetAcaoAsync(ticker);
+            var acao = await _acaoRepository.GetAcaoAsync(ticker, userId);
             if ( acao == null ) throw new InvalidOperationException("Stock not found.");
 
             var acaoAggregate = new AcaoAggregate(acao);
@@ -46,13 +51,13 @@ namespace PortfolioAcoes.Application.Services
 
             await _acaoRepository.InsertAcaoAsync(acao);
 
-            var transacao = new Transacao(ticker, DateTime.UtcNow, (int)TipoTransacaoEnum.Venda, quantidade, precoPorAcao);
+            var transacao = new Transacao(ticker, DateTime.UtcNow, (int)TipoTransacaoEnum.Venda, quantidade, precoPorAcao, userId);
             await _acaoRepository.InsertTransacaoAsync(transacao);
         }
 
-        public async Task ReceberDividendoAsync(string ticker, decimal valorDividendo)
+        public async Task ReceberDividendoAsync(string ticker, decimal valorDividendo, string userId)
         {
-            var acao = await _acaoRepository.GetAcaoAsync(ticker);
+            var acao = await _acaoRepository.GetAcaoAsync(ticker, userId);
             if ( acao == null ) throw new InvalidOperationException("Stock not found.");
 
             var acaoAggregate = new AcaoAggregate(acao);
@@ -60,13 +65,13 @@ namespace PortfolioAcoes.Application.Services
 
             await _acaoRepository.InsertAcaoAsync(acao);
 
-            var dividendo = new Dividendo(ticker, DateTime.UtcNow, valorDividendo);
+            var dividendo = new Dividendo(ticker, DateTime.UtcNow, valorDividendo, userId);
             await _acaoRepository.InsertDividendoAsync(dividendo);
         }
 
-        public async Task<decimal> CalcularLucroOuPerda(string ticker)
+        public async Task<decimal> CalcularLucroOuPerda(string ticker, string userId)
         {
-            var acao = await _acaoRepository.GetAcaoAsync(ticker);
+            var acao = await _acaoRepository.GetAcaoAsync(ticker, userId);
             if ( acao == null ) throw new InvalidOperationException("Stock not found.");
 
             var precoAtualPorAcao = await _alphaVantageService.GetPrecoAtualPorAcaoAsync(ticker);
@@ -75,19 +80,19 @@ namespace PortfolioAcoes.Application.Services
             return acaoAggregate.CalculaLucroOuPerda(precoAtualPorAcao);
         }
 
-        public Task<List<Acao>> GetAcoes()
+        public Task<List<Acao>> GetAcoes(string userId)
         {
-            return _acaoRepository.GetAcoesAsync();
+            return _acaoRepository.GetAcoesAsync(userId);
         }
 
-        public Task<List<Dividendo>> GetDividendos()
+        public Task<List<Dividendo>> GetDividendos(string userId)
         {
-            return _acaoRepository.GetDividendosAsync();
+            return _acaoRepository.GetDividendosAsync(userId);
         }
 
-        public Task<List<Transacao>> GetTransacoes()
+        public Task<List<Transacao>> GetTransacoes(string userId)
         {
-            return _acaoRepository.GetTransacoesAsync();
+            return _acaoRepository.GetTransacoesAsync(userId);
         }
     }
 }

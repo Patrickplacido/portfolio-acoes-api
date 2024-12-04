@@ -22,6 +22,7 @@ namespace PortfolioAcoes.Infrastructure
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).IsRequired();
                 entity.Property(e => e.TotalInvestido).HasColumnType("decimal(18,2)");
+                entity.Property(e => e.UserId).IsRequired();
             });
 
             modelBuilder.Entity<Transacao>(entity =>
